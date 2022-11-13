@@ -1,22 +1,24 @@
+const createButtonKey = key => `Key${key.toUpperCase()}`
+
+let keydownListener
+let keyupListener
+
 function setShowSubtitlesKey(toggleSubs, showSubs) {
     const showSubsButtonKey = createButtonKey(showSubs)
     const toggleSubsKey = createButtonKey(toggleSubs)
 
-    const findBySelectorAndLabel = (selector, label) =>
-        [...document.querySelectorAll(selector)].map(x => [...x.children]).flat().find(x => x.innerHTML.toLowerCase() === label)?.parentElement
-
-    const subtitlesBtn = findBySelectorAndLabel('pjsdiv[fid]', 'субтитры')
+    const subtitlesBtn = document.querySelector("#cdnplayer_settings > pjsdiv > pjsdiv:nth-child(3)")
     subtitlesBtn.click()
 
-    const engSubtitlesBtn = findBySelectorAndLabel('pjsdiv[f2id]', 'english')
-    const turnOffSubtitlesBtn = findBySelectorAndLabel('pjsdiv[f2id]', 'откл.')
+    const engSubtitlesBtn = document.querySelector("#cdnplayer_settings > pjsdiv > pjsdiv:nth-child(8)")
+    const turnOffSubtitlesBtn = document.querySelector("#cdnplayer_settings > pjsdiv > pjsdiv:nth-child(9)")
 
     turnOffSubtitlesBtn.click()
 
     let pressed = false
     let lastClickedButton = turnOffSubtitlesBtn
 
-    document.addEventListener('keydown', ({code}) => {
+    let keydownListener = ({code}) => {
         if (pressed) return;
 
         if (code === toggleSubsKey) {
@@ -30,35 +32,45 @@ function setShowSubtitlesKey(toggleSubs, showSubs) {
         pressed = true
 
         engSubtitlesBtn.click()
-    })
+    }
 
-    document.addEventListener('keyup', ({code}) => {
+    let keyupListener = ({code}) => {
         if (code !== showSubsButtonKey) return;
         pressed = false
 
         turnOffSubtitlesBtn.click()
-    })
-}
-// setShowSubtitlesKey('r', 'e')
+    }
 
+    document.addEventListener('keydown', keydownListener)
+    document.addEventListener('keyup', keyupListener)
+}
+
+const cleanUp = () => {
+    document.removeEventListener('keydown', keydownListener)
+    document.removeEventListener('keyup', keyupListener)
+    isSetUp = false
+}
 
 const translatorsList = document.querySelector("#translators-list")
 
 const isOriginal = () => {
     const active = translatorsList.querySelector('.active')
-    return active.textContent.toUpperCase().includes('Оригинал (+субтитры)'.toUpperCase())
+    return active.textContent.toLowerCase().includes('оригинал (+субтитры)')
 }
 
-let setUp = false
+let isSetUp = false
 
-const observer = () => {
-    if (isOriginal() || !setUp) {
+const setUp = () => {
+    if (isOriginal()) {
+        if (isSetUp) return;
         setShowSubtitlesKey('r', 'e')
-        setUp = true
+        isSetUp = true
+    } else {
+        cleanUp()
     }
 }
 
 const setObserver = () =>
-    new MutationObserver(observer).observe(translatorsList, { attributes: true, childList: true, subtree: true })
+    new MutationObserver(setUp).observe(translatorsList, { attributes: true, childList: true, subtree: true })
 
-isOriginal() ? observer() : setObserver()
+isOriginal() ? setUp() : setObserver()

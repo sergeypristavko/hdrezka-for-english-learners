@@ -1,8 +1,8 @@
-const createButtonKey = key => `Key${key.toUpperCase()}`
+const createButtonKey2 = key => `Key${key.toUpperCase()}`
 
-function setMovingKeys(back, forward) {
-    const backButtonKey = createButtonKey(back)
-    const forwardButtonKey = createButtonKey(forward)
+function setRewindKeys(back, forward) {
+    const backButtonKey = createButtonKey2(back)
+    const forwardButtonKey = createButtonKey2(forward)
 
     const keysMap = {
         [backButtonKey]: 37,
@@ -27,4 +27,4 @@ function setMovingKeys(back, forward) {
     return () => document.removeEventListener('keydown', listener)
 }
 
-setMovingKeys('q', 'w')
+setRewindKeys('q', 'w')
