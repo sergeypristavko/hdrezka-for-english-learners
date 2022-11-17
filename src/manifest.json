@@ -6,9 +6,7 @@
   "content_scripts": [
     {
       "js": [
-        "scripts/toggleSubtitles.js",
-        "scripts/replaceSubtitles.js",
-        "scripts/setRewindButtons.js"
+        "scripts/index.js"
       ],
       "matches": [
         "https://hdrezka.ag/*.html"

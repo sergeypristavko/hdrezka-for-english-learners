@@ -1,8 +1,9 @@
-function setRewindKeys(back, forward, prevQuote) {
+import {createButtonKey} from "./utils";
+
+const setRewindKeys = ({back, forward, prevQuote}) => {
     const video = document.querySelector("#oframecdnplayer  video")
 
     const rewind = value => video.currentTime += value
-    const createButtonKey = key => `Key${key.toUpperCase()}`
 
     const backButtonKey = createButtonKey(back)
     const forwardButtonKey = createButtonKey(forward)
@@ -30,4 +31,4 @@ function setRewindKeys(back, forward, prevQuote) {
     return () => document.removeEventListener('keydown', listener)
 }
 
-setRewindKeys('q', 'w', 'a')
+export default setRewindKeys
