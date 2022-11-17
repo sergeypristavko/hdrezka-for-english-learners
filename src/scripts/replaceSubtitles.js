@@ -1,24 +1,29 @@
-import { clearHTMLTags } from "./utils";
+import {clearHTMLTags} from "./utils";
 import '../styles/style.css'
+import {
+    ORIGINAL_SUBS_TEXT,
+    ORIGINAL_SUBS_WRAPPER,
+    PLAY_BUTTON,
+    PLAYER_BACKGROUND,
+    PLAYER_BODY,
+    VIDEO
+} from "./constants";
 
-const replaceSubtitles = () => {
-    const playBackground = document.querySelector("#oframecdnplayer > pjsdiv:nth-child(3)")
-    const playButton = document.querySelector("#oframecdnplayer > pjsdiv:nth-child(20) > pjsdiv:nth-child(1) > pjsdiv")
+const replaceSubtitles = ({ dictionaryBase }) => {
+    const playBackground = document.querySelector(PLAYER_BACKGROUND)
+    const playButton = document.querySelector(PLAY_BUTTON)
+    const video = document.querySelector(VIDEO)
 
-    let isSetup = false
+    const getSubsWrapper = () => document.querySelector(ORIGINAL_SUBS_WRAPPER)
+    const getSubsText = () => clearHTMLTags(document.querySelector(ORIGINAL_SUBS_TEXT)?.innerHTML || '')
+
+    let initialized = false
 
     const listener = () => {
-        if (isSetup) return;
-
-        isSetup = true
-
-        const getSubsWrapper = () => document.querySelector("#oframecdnplayer > pjsdiv:nth-child(29)")
-
-        const video = document.querySelector("#oframecdnplayer  video")
+        if (initialized) return;
+        initialized = true
 
         const activate = () => {
-            const getSubsText = () => document.querySelector("#oframecdnplayer > pjsdiv:nth-child(29) > span")?.innerHTML?.replaceAll('<br>', ' ')
-
             let prevSubsText = getSubsText()
 
             const callback = () => {
@@ -37,21 +42,19 @@ const replaceSubtitles = () => {
 
             callback()
 
-            observer.observe(getSubsWrapper(), {  childList: true })
+            observer.observe(getSubsWrapper(), {childList: true})
 
-            const rerenderSubs = (text = '') => {
-                const playerBody = document.querySelector("#oframecdnplayer")
+            const rerenderSubs = text => {
+                const playerBody = document.querySelector(PLAYER_BODY)
 
                 const div = document.createElement('div')
                 const id = 'subtitles'
 
                 div.onmouseover = () => {}
 
-                let textNew = clearHTMLTags(text).split(' ').map(word => `
-                <a href='https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(word)}' target="_blank">${word}</a>
+                let textNew = text.split(' ').map(word => `
+                <a href='${dictionaryBase}${encodeURIComponent(word.replace(/\W/gm, ''))}' target="_blank">${word}</a>
             `).join(' ')
-
-
 
                 const subtitlesBlock = playerBody.querySelector(`#${id}`)
 
@@ -80,7 +83,7 @@ const replaceSubtitles = () => {
         }, 1000)
     };
 
-    [playButton, playBackground].forEach(el => el.addEventListener('click', listener, { once: true }))
+    [playButton, playBackground].forEach(el => el.addEventListener('click', listener, {once: true}))
 }
 
 export default replaceSubtitles

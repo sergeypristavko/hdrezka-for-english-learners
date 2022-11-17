@@ -3,7 +3,7 @@ import {createButtonKey, findBySelectorAndLabel} from "./utils";
 const toggleSubtitles = ({toggleSubsButton, showSubsButton}) => {
     let keydownListener
     let keyupListener
-    let isSetUp = false
+    let initialized = false
 
     const setSubtitlesVisibility = () => {
         const subs = document.querySelector("#subtitles") || {}
@@ -48,7 +48,7 @@ const toggleSubtitles = ({toggleSubsButton, showSubsButton}) => {
     const cleanUp = () => {
         document.removeEventListener('keydown', keydownListener)
         document.removeEventListener('keyup', keyupListener)
-        isSetUp = false
+        initialized = false
     }
 
     const translatorsList = document.querySelector("#translators-list")
@@ -60,9 +60,9 @@ const toggleSubtitles = ({toggleSubsButton, showSubsButton}) => {
 
     const setUp = () => {
         if (isOriginal()) {
-            if (isSetUp) return;
+            if (initialized) return;
             setShowSubtitlesKey(toggleSubsButton, showSubsButton)
-            isSetUp = true
+            initialized = true
         } else {
             cleanUp()
         }

@@ -1,4 +1,4 @@
-export const clearHTMLTags = str => str.replace(/(<([^>]+)>)/gi, '')
+export const clearHTMLTags = str => str.replace(/(<([^>]+)>)/gi, ' ')
 
 export const createButtonKey = key => `Key${key.toUpperCase()}`
 

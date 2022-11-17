@@ -1,7 +1,8 @@
 import {createButtonKey} from "./utils";
+import {VIDEO} from "./constants";
 
 const setRewindKeys = ({back, forward, prevQuote}) => {
-    const video = document.querySelector("#oframecdnplayer  video")
+    const video = document.querySelector(VIDEO)
 
     const rewind = value => video.currentTime += value
 
