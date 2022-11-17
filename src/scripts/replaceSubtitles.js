@@ -1,6 +1,6 @@
 import {clearHTMLTags} from "./utils";
-import '../styles/style.css'
 import {
+    CUSTOM_SUBTITLES,
     ORIGINAL_SUBS_TEXT,
     ORIGINAL_SUBS_WRAPPER,
     PLAY_BUTTON,
@@ -8,82 +8,66 @@ import {
     PLAYER_BODY,
     VIDEO
 } from "./constants";
+import Subtitles from "./Subtitles";
 
 const replaceSubtitles = ({ dictionaryBase }) => {
-    const playBackground = document.querySelector(PLAYER_BACKGROUND)
-    const playButton = document.querySelector(PLAY_BUTTON)
-    const video = document.querySelector(VIDEO)
+    const $playBackground = document.querySelector(PLAYER_BACKGROUND)
+    const $playerBody = document.querySelector(PLAYER_BODY)
+    const $playButton = document.querySelector(PLAY_BUTTON)
+    const $video = document.querySelector(VIDEO)
 
     const getSubsWrapper = () => document.querySelector(ORIGINAL_SUBS_WRAPPER)
     const getSubsText = () => clearHTMLTags(document.querySelector(ORIGINAL_SUBS_TEXT)?.innerHTML || '')
 
     let initialized = false
 
-    const listener = () => {
-        if (initialized) return;
-        initialized = true
+    const init = () => {
+        let prevSubsText
 
-        const activate = () => {
-            let prevSubsText = getSubsText()
+        const rerenderSubs = () => {
+            const text = getSubsText()
+            if (text === prevSubsText) return;
 
-            const callback = () => {
-                const subsText = getSubsText()
+            const $subtitlesBlock = $playerBody.querySelector(CUSTOM_SUBTITLES)
 
-                if (prevSubsText !== subsText) {
-                    prevSubsText = subsText
-                    if (subsText) {
-                        window.prevQuoteTime = video.currentTime
-                    }
-                    rerenderSubs(subsText)
-                }
+            if ($subtitlesBlock) {
+                $subtitlesBlock.innerHTML = ''
             }
 
-            const observer = new MutationObserver(callback)
+            if (!text) return;
 
-            callback()
+            window.prevQuoteTime = $video.currentTime
+            prevSubsText = text
 
-            observer.observe(getSubsWrapper(), {childList: true})
-
-            const rerenderSubs = text => {
-                const playerBody = document.querySelector(PLAYER_BODY)
-
-                const div = document.createElement('div')
-                const id = 'subtitles'
-
-                div.onmouseover = () => {}
-
-                let textNew = text.split(' ').map(word => `
-                <a href='${dictionaryBase}${encodeURIComponent(word.replace(/\W/gm, ''))}' target="_blank">${word}</a>
-            `).join(' ')
-
-                const subtitlesBlock = playerBody.querySelector(`#${id}`)
-
-                if (subtitlesBlock) {
-                    subtitlesBlock.innerHTML = textNew
-                    return;
-                }
-
-                div.id = id
-                div.innerHTML = textNew
-                div.classList.add('subtitles-text')
-                playerBody.append(div)
+            if ($subtitlesBlock) {
+                $subtitlesBlock.innerHTML = Subtitles(dictionaryBase, text, true)
+            } else {
+                $playerBody.insertAdjacentHTML('beforeend', Subtitles(dictionaryBase, text))
             }
         }
 
-        setTimeout(() => {
-            const interval = setInterval(() => {
-                const subsWrapper = getSubsWrapper()
+        rerenderSubs()
 
-                if (subsWrapper) {
-                    subsWrapper.style.opacity = 0
-                    activate()
-                    clearInterval(interval)
-                }
-            }, 50)
-        }, 1000)
+        new MutationObserver(rerenderSubs).observe(getSubsWrapper(), {childList: true})
+    }
+
+    const playListener = () => {
+        if (initialized) return;
+        initialized = true
+
+        const observer = new MutationObserver(() => {
+            const subsWrapper = getSubsWrapper()
+            if (subsWrapper) {
+                subsWrapper.style.opacity = 0
+                init()
+                observer.disconnect()
+            }
+        })
+
+        observer.observe(document.querySelector(PLAYER_BODY), {childList: true})
     };
 
-    [playButton, playBackground].forEach(el => el.addEventListener('click', listener, {once: true}))
+    [$playButton, $playBackground].forEach(el => el.addEventListener('click', playListener, {once: true}))
 }
 
 export default replaceSubtitles

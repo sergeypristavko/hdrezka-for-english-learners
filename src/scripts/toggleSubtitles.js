@@ -13,7 +13,10 @@ const toggleSubtitles = ({toggleSubsButton, showSubsButton}) => {
 
     const toggleSubtitlesVisibility = () => {
         const $subs = document.querySelector(CUSTOM_SUBTITLES)
-        $subs.hidden = !$subs.hidden
+
+        if ($subs) {
+            $subs.hidden = !$subs.hidden
+        }
     }
 
     const initListeners = () => {
