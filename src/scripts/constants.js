@@ -6,4 +6,8 @@ export const VIDEO = "#oframecdnplayer  video"
 
 export const ORIGINAL_SUBS_WRAPPER = "#oframecdnplayer > pjsdiv:nth-child(29)"
 export const ORIGINAL_SUBS_TEXT = "#oframecdnplayer > pjsdiv:nth-child(29) > span"
+export const CUSTOM_SUBTITLES = "#subtitles"
 
+export const TRANSLATORS_LIST = "#translators-list"
+
+export const SUBTITLES_BUTTON = 'pjsdiv[fid]'

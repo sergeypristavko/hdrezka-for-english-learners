@@ -16,7 +16,8 @@ initToggleSubtitles({
 initRewindButtons({
     back: 'q',
     forward: 'w',
-    prevQuote: 'a'
+    prevQuote: 'a',
+    rewindInterval: 5,
 })
 
 initReplaceSubtitles({

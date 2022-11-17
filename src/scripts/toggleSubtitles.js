@@ -1,44 +1,48 @@
 import {createButtonKey, findBySelectorAndLabel} from "./utils";
+import {CUSTOM_SUBTITLES, SUBTITLES_BUTTON, TRANSLATORS_LIST} from "./constants";
 
 const toggleSubtitles = ({toggleSubsButton, showSubsButton}) => {
+    const $translatorsList = document.querySelector(TRANSLATORS_LIST)
+
+    const showSubsButtonKey = createButtonKey(showSubsButton)
+    const toggleSubsKey = createButtonKey(toggleSubsButton)
+
     let keydownListener
     let keyupListener
     let initialized = false
 
-    const setSubtitlesVisibility = () => {
-        const subs = document.querySelector("#subtitles") || {}
-        subs.hidden = !subs.hidden
+    const toggleSubtitlesVisibility = () => {
+        const $subs = document.querySelector(CUSTOM_SUBTITLES)
+        $subs.hidden = !$subs.hidden
     }
 
-    function setShowSubtitlesKey(toggleSubs, showSubs) {
-        const showSubsButtonKey = createButtonKey(showSubs)
-        const toggleSubsKey = createButtonKey(toggleSubs)
+    const initListeners = () => {
+        const $subtitlesBtn = findBySelectorAndLabel(SUBTITLES_BUTTON, 'субтитры')
+        const $engSubtitlesBtn = findBySelectorAndLabel(SUBTITLES_BUTTON, 'english')
 
-        const subtitlesBtn = findBySelectorAndLabel('pjsdiv[fid]', 'субтитры')
-        subtitlesBtn.click()
+        $subtitlesBtn?.click()
+        $engSubtitlesBtn?.click()
 
         let pressed = false
 
         keydownListener = ({code}) => {
-            if (pressed) {
-                return;
-            }
+            if (pressed) return
 
             if (code === toggleSubsKey) {
-                setSubtitlesVisibility()
+                toggleSubtitlesVisibility()
                 return;
             }
 
             if (code !== showSubsButtonKey || pressed) return;
             pressed = true
 
-            setSubtitlesVisibility()
+            toggleSubtitlesVisibility()
         }
 
         keyupListener = ({code}) => {
             if (code !== showSubsButtonKey) return;
             pressed = false
-            setSubtitlesVisibility()
+            toggleSubtitlesVisibility()
         }
 
         document.addEventListener('keydown', keydownListener)
@@ -51,17 +55,15 @@ const toggleSubtitles = ({toggleSubsButton, showSubsButton}) => {
         initialized = false
     }
 
-    const translatorsList = document.querySelector("#translators-list")
-
-    const isOriginal = () => {
-        const active = translatorsList.querySelector('.active')
+    const isOriginalSelected = () => {
+        const active = $translatorsList.querySelector('.active')
         return active.textContent.toLowerCase().includes('оригинал (+субтитры)')
     }
 
-    const setUp = () => {
-        if (isOriginal()) {
+    const init = () => {
+        if (isOriginalSelected()) {
             if (initialized) return;
-            setShowSubtitlesKey(toggleSubsButton, showSubsButton)
+            initListeners()
             initialized = true
         } else {
             cleanUp()
@@ -69,9 +71,16 @@ const toggleSubtitles = ({toggleSubsButton, showSubsButton}) => {
     }
 
     const setObserver = () =>
-        new MutationObserver(setUp).observe(translatorsList, { attributes: true, childList: true, subtree: true })
+        new MutationObserver(init).observe(
+            $translatorsList,
+    {
+                attributes: true,
+                childList: true,
+                subtree: true
+           }
+        )
 
-    isOriginal() ? setUp() : setObserver()
+    isOriginalSelected() ? init() : setObserver()
 }
 
 export default toggleSubtitles

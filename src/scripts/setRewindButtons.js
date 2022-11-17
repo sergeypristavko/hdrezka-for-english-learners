@@ -1,28 +1,28 @@
 import {createButtonKey} from "./utils";
 import {VIDEO} from "./constants";
 
-const setRewindKeys = ({back, forward, prevQuote}) => {
-    const video = document.querySelector(VIDEO)
-
-    const rewind = value => video.currentTime += value
+const setRewindButtons = ({ back, forward, prevQuote, rewindInterval }) => {
+    const $video = document.querySelector(VIDEO)
 
     const backButtonKey = createButtonKey(back)
     const forwardButtonKey = createButtonKey(forward)
     const prevQuoteKey = createButtonKey(prevQuote)
 
+    const rewind = value => $video.currentTime += value
+
     const listener = ({code}) => {
         if (code === backButtonKey) {
-            rewind(-5)
+            rewind(-rewindInterval)
         }
         if (code === forwardButtonKey) {
-            rewind(5)
+            rewind(rewindInterval)
         }
         if (code === prevQuoteKey) {
             if (window.prevQuoteTime) {
-                video.currentTime = window.prevQuoteTime - 2
+                $video.currentTime = window.prevQuoteTime - 2
                 window.prevQuoteTime = 0
             } else {
-                rewind(-5)
+                rewind(-rewindInterval)
             }
         }
     }
@@ -32,4 +32,4 @@ const setRewindKeys = ({back, forward, prevQuote}) => {
     return () => document.removeEventListener('keydown', listener)
 }
 
-export default setRewindKeys
+export default setRewindButtons
