@@ -7,11 +7,14 @@ function setShowSubtitlesKey(toggleSubs, showSubs) {
     const showSubsButtonKey = createButtonKey(showSubs)
     const toggleSubsKey = createButtonKey(toggleSubs)
 
-    const subtitlesBtn = document.querySelector("#cdnplayer_settings > pjsdiv > pjsdiv:nth-child(3)")
+    const findBySelectorAndLabel = (selector, label) =>
+        [...document.querySelectorAll(selector)].map(x => [...x.children]).flat().find(x => x.innerHTML.toLowerCase() === label)?.parentElement
+
+    const subtitlesBtn = findBySelectorAndLabel('pjsdiv[fid]', 'субтитры')
     subtitlesBtn.click()
 
-    const engSubtitlesBtn = document.querySelector("#cdnplayer_settings > pjsdiv > pjsdiv:nth-child(8)")
-    const turnOffSubtitlesBtn = document.querySelector("#cdnplayer_settings > pjsdiv > pjsdiv:nth-child(9)")
+    const engSubtitlesBtn = findBySelectorAndLabel('pjsdiv[f2id]', 'english')
+    const turnOffSubtitlesBtn = findBySelectorAndLabel('pjsdiv[f2id]', 'откл.')
 
     turnOffSubtitlesBtn.click()
 

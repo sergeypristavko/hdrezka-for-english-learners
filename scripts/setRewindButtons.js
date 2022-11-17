@@ -1,24 +1,27 @@
-const createButtonKey2 = key => `Key${key.toUpperCase()}`
+function setRewindKeys(back, forward, prevQuote) {
+    const video = document.querySelector("#oframecdnplayer  video")
 
-function setRewindKeys(back, forward) {
-    const backButtonKey = createButtonKey2(back)
-    const forwardButtonKey = createButtonKey2(forward)
+    const rewind = value => video.currentTime += value
+    const createButtonKey = key => `Key${key.toUpperCase()}`
 
-    const keysMap = {
-        [backButtonKey]: 37,
-        [forwardButtonKey]: 39,
-    }
+    const backButtonKey = createButtonKey(back)
+    const forwardButtonKey = createButtonKey(forward)
+    const prevQuoteKey = createButtonKey(prevQuote)
 
     const listener = ({code}) => {
-        if ([backButtonKey, forwardButtonKey].includes(code)) {
-            const keyCode = keysMap[code]
-
-            const event = new KeyboardEvent('keydown', {
-                keyCode,
-                bubbles: true,
-            })
-
-            document.body.dispatchEvent(event)
+        if (code === backButtonKey) {
+            rewind(-5)
+        }
+        if (code === forwardButtonKey) {
+            rewind(5)
+        }
+        if (code === prevQuoteKey) {
+            if (window.prevQuoteTime) {
+                video.currentTime = window.prevQuoteTime - 2
+                window.prevQuoteTime = 0
+            } else {
+                rewind(-5)
+            }
         }
     }
 
@@ -27,4 +30,4 @@ function setRewindKeys(back, forward) {
     return () => document.removeEventListener('keydown', listener)
 }
 
-setRewindKeys('q', 'w')
+setRewindKeys('q', 'w', 'a')
