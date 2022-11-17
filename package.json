@@ -1,5 +1,5 @@
 {
-  "name": "Hsdflkjklj",
+  "name": "HDrezka plugin for English learners",
   "version": "1.0.0",
   "description": "HDrezka plugin for English learners",
   "repository": "git@github.com:sergeypristavko/hdrezka-for-english-learners.git",
@@ -12,5 +12,9 @@
   "scripts": {
     "start": "parcel watch src/manifest.json --host localhost",
     "build": "parcel build src/manifest.json"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

@@ -16,7 +16,10 @@
       ]
     }
   ],
-  "options_page": "popup/popup.html",
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
   "action": {
     "default_title": "HDrezka for English learners",
     "default_icon": "assets/icon.png",
