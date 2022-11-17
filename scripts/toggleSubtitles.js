@@ -1,9 +1,15 @@
-const createButtonKey = key => `Key${key.toUpperCase()}`
-
 let keydownListener
 let keyupListener
+let isSetUp = false
+
+const setSubtitlesVisibility = () => {
+    const subs = document.querySelector("#subtitles") || {}
+    subs.hidden = !subs.hidden
+}
 
 function setShowSubtitlesKey(toggleSubs, showSubs) {
+    const createButtonKey = key => `Key${key.toUpperCase()}`
+
     const showSubsButtonKey = createButtonKey(showSubs)
     const toggleSubsKey = createButtonKey(toggleSubs)
 
@@ -13,35 +19,28 @@ function setShowSubtitlesKey(toggleSubs, showSubs) {
     const subtitlesBtn = findBySelectorAndLabel('pjsdiv[fid]', 'субтитры')
     subtitlesBtn.click()
 
-    const engSubtitlesBtn = findBySelectorAndLabel('pjsdiv[f2id]', 'english')
-    const turnOffSubtitlesBtn = findBySelectorAndLabel('pjsdiv[f2id]', 'откл.')
-
-    turnOffSubtitlesBtn.click()
-
     let pressed = false
-    let lastClickedButton = turnOffSubtitlesBtn
 
-    let keydownListener = ({code}) => {
-        if (pressed) return;
+    keydownListener = ({code}) => {
+        if (pressed) {
+            return;
+        }
 
         if (code === toggleSubsKey) {
-            const target = lastClickedButton === turnOffSubtitlesBtn ? engSubtitlesBtn : turnOffSubtitlesBtn
-            target.click()
-            lastClickedButton = target
+            setSubtitlesVisibility()
             return;
         }
 
         if (code !== showSubsButtonKey || pressed) return;
         pressed = true
 
-        engSubtitlesBtn.click()
+        setSubtitlesVisibility()
     }
 
-    let keyupListener = ({code}) => {
+    keyupListener = ({code}) => {
         if (code !== showSubsButtonKey) return;
         pressed = false
-
-        turnOffSubtitlesBtn.click()
+        setSubtitlesVisibility()
     }
 
     document.addEventListener('keydown', keydownListener)
@@ -60,8 +59,6 @@ const isOriginal = () => {
     const active = translatorsList.querySelector('.active')
     return active.textContent.toLowerCase().includes('оригинал (+субтитры)')
 }
-
-let isSetUp = false
 
 const setUp = () => {
     if (isOriginal()) {
