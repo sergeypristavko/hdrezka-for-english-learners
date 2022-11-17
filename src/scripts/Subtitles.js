@@ -19,3 +19,9 @@ const Subtitles = (dictionaryBase, text, insidesOnly) => {
 }
 
 export default Subtitles
+
+document.addEventListener('fullscreenchange', () => {
+    const $subtitlesBlock = document.querySelector(CUSTOM_SUBTITLES)
+
+    $subtitlesBlock.style.fontSize = document.fullscreenElement ? '26px' : '14px'
+});
