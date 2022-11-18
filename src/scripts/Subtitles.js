@@ -1,4 +1,4 @@
-import {CUSTOM_SUBTITLES} from "./constants";
+import {CUSTOM_SUBTITLES} from "./selectors";
 import '../styles/style.css'
 
 const Subtitles = (dictionaryBase, text, insidesOnly) => {
@@ -20,6 +20,7 @@ const Subtitles = (dictionaryBase, text, insidesOnly) => {
 
 export default Subtitles
 
+// forgive me father, for I am about to sin
 document.addEventListener('fullscreenchange', () => {
     const $subtitlesBlock = document.querySelector(CUSTOM_SUBTITLES)
 

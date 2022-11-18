@@ -16,4 +16,4 @@ export const defaultValues = {
     [DICTIONARY_BASE_ID]: 'https://dictionary.cambridge.org/dictionary/english/',
 }
 
-export const cachedValueOrDefault = (hotKeysMap, key) => hotKeysMap[key] || defaultValues[key]
+export const getCachedValueOrDefault = (userPreferences, key) => userPreferences[key] || defaultValues[key]

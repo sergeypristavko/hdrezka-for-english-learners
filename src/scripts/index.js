@@ -9,7 +9,7 @@ import {
     REWIND_INTERVAL_ID,
     SHOW_SUBS_ID,
     TOGGLE_SUBS_ID,
-    cachedValueOrDefault
+    getCachedValueOrDefault
 } from "../constants";
 
 chrome.storage.sync.get([
@@ -19,20 +19,20 @@ chrome.storage.sync.get([
     REWIND_INTERVAL_ID,
     SHOW_SUBS_ID,
     TOGGLE_SUBS_ID
-]).then(hotKeysMap => {
+]).then(userPreferences => {
     initToggleSubtitles({
-        toggleSubsButton: cachedValueOrDefault(hotKeysMap, TOGGLE_SUBS_ID),
-        showSubsButton: cachedValueOrDefault(hotKeysMap, SHOW_SUBS_ID)
+        toggleSubsButton: getCachedValueOrDefault(userPreferences, TOGGLE_SUBS_ID),
+        showSubsButton: getCachedValueOrDefault(userPreferences, SHOW_SUBS_ID)
     })
 
     initRewindButtons({
-        back: cachedValueOrDefault(hotKeysMap, BACK_BUTTON_ID),
-        forward: cachedValueOrDefault(hotKeysMap, FORWARD_BUTTON_ID),
-        prevQuote: cachedValueOrDefault(hotKeysMap, PREV_QUOTE_ID),
-        rewindInterval: cachedValueOrDefault(hotKeysMap, REWIND_INTERVAL_ID),
+        back: getCachedValueOrDefault(userPreferences, BACK_BUTTON_ID),
+        forward: getCachedValueOrDefault(userPreferences, FORWARD_BUTTON_ID),
+        prevQuote: getCachedValueOrDefault(userPreferences, PREV_QUOTE_ID),
+        rewindInterval: getCachedValueOrDefault(userPreferences, REWIND_INTERVAL_ID),
     })
 
     initReplaceSubtitles({
-        dictionaryBase: cachedValueOrDefault(hotKeysMap, DICTIONARY_BASE_ID)
+        dictionaryBase: getCachedValueOrDefault(userPreferences, DICTIONARY_BASE_ID)
     })
 })

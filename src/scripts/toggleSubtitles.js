@@ -1,5 +1,5 @@
 import {createButtonKey, findBySelectorAndLabel} from "./utils";
-import {CUSTOM_SUBTITLES, SUBTITLES_BUTTON, TRANSLATORS_LIST} from "./constants";
+import {CUSTOM_SUBTITLES, SUBTITLES_BUTTON, TRANSLATORS_LIST} from "./selectors";
 
 const toggleSubtitles = ({toggleSubsButton, showSubsButton}) => {
     const $translatorsList = document.querySelector(TRANSLATORS_LIST)

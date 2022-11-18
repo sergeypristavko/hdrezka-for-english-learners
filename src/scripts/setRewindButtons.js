@@ -1,5 +1,5 @@
 import {createButtonKey} from "./utils";
-import {VIDEO} from "./constants";
+import {VIDEO} from "./selectors";
 
 const setRewindButtons = ({ back, forward, prevQuote, rewindInterval }) => {
     const $video = document.querySelector(VIDEO)

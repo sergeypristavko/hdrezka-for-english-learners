@@ -7,7 +7,7 @@ import {
     PLAYER_BACKGROUND,
     PLAYER_BODY,
     VIDEO
-} from "./constants";
+} from "./selectors";
 import Subtitles from "./Subtitles";
 
 const replaceSubtitles = ({ dictionaryBase }) => {
