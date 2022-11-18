@@ -1,25 +1,38 @@
 import initToggleSubtitles from './toggleSubtitles'
 import initRewindButtons from './setRewindButtons'
 import initReplaceSubtitles from './replaceSubtitles'
+import {
+    BACK_BUTTON_ID,
+    DICTIONARY_BASE_ID,
+    FORWARD_BUTTON_ID,
+    PREV_QUOTE_ID,
+    REWIND_INTERVAL_ID,
+    SHOW_SUBS_ID,
+    TOGGLE_SUBS_ID,
+    cachedValueOrDefault
+} from "../constants";
 
-const dictionariesUrls = {
-    wooordHunt: 'https://wooordhunt.ru/word/',
-    cambridge: 'https://dictionary.cambridge.org/dictionary/english/',
-    collins: 'https://www.collinsdictionary.com/dictionary/english/'
-}
+chrome.storage.sync.get([
+    BACK_BUTTON_ID,
+    DICTIONARY_BASE_ID,
+    PREV_QUOTE_ID,
+    REWIND_INTERVAL_ID,
+    SHOW_SUBS_ID,
+    TOGGLE_SUBS_ID
+]).then(hotKeysMap => {
+    initToggleSubtitles({
+        toggleSubsButton: cachedValueOrDefault(hotKeysMap, TOGGLE_SUBS_ID),
+        showSubsButton: cachedValueOrDefault(hotKeysMap, SHOW_SUBS_ID)
+    })
 
-initToggleSubtitles({
-    toggleSubsButton: 'r',
-    showSubsButton: 'e'
-})
+    initRewindButtons({
+        back: cachedValueOrDefault(hotKeysMap, BACK_BUTTON_ID),
+        forward: cachedValueOrDefault(hotKeysMap, FORWARD_BUTTON_ID),
+        prevQuote: cachedValueOrDefault(hotKeysMap, PREV_QUOTE_ID),
+        rewindInterval: cachedValueOrDefault(hotKeysMap, REWIND_INTERVAL_ID),
+    })
 
-initRewindButtons({
-    back: 'q',
-    forward: 'w',
-    prevQuote: 'a',
-    rewindInterval: 5,
-})
-
-initReplaceSubtitles({
-    dictionaryBase: dictionariesUrls.cambridge
+    initReplaceSubtitles({
+        dictionaryBase: cachedValueOrDefault(hotKeysMap, DICTIONARY_BASE_ID)
+    })
 })
