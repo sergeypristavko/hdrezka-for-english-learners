@@ -26,7 +26,7 @@ const replaceSubtitles = ({ dictionaryBase }) => {
 
         const rerenderSubs = () => {
             const text = getSubsText()
-            if (text === prevSubsText) return;
+            if (text === prevSubsText && prevSubsText && text) return;
 
             const $subtitlesBlock = $playerBody.querySelector(CUSTOM_SUBTITLES)
 
