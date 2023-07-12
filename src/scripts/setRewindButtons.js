@@ -8,7 +8,10 @@ const setRewindButtons = ({ back, forward, prevQuote, rewindInterval }) => {
     const forwardButtonKey = createButtonKey(forward)
     const prevQuoteKey = createButtonKey(prevQuote)
 
-    const rewind = value => $video.currentTime += value
+    const rewind = value => {
+        $video.currentTime += value
+        window.prevSubsText = null
+    }
 
     const listener = ({code}) => {
         if (code === backButtonKey) {
@@ -32,4 +35,4 @@ const setRewindButtons = ({ back, forward, prevQuote, rewindInterval }) => {
     return () => document.removeEventListener('keydown', listener)
 }
 
-export default setRewindButtons
+export default (params) => setTimeout(() => setRewindButtons(params), 500)

@@ -12,7 +12,8 @@
         "scripts/index.js"
       ],
       "matches": [
-        "https://hdrezka.ag/*.html"
+        "https://hdrezka.ag/*.html",
+        "https://hdrezka.co/*.html"
       ]
     }
   ],

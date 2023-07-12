@@ -4,6 +4,8 @@ const Input = ({ defaultValue, label, storageKey, type, options }) => {
     const [value, setValue] = useState(defaultValue)
 
     const updateValue = ({ target: { value }}) => {
+        let finalValue = value
+
         if (type === 'text') {
             const hasInvalidCharacters = /[\W\d]/g.test(value)
             if (hasInvalidCharacters) {
@@ -11,8 +13,12 @@ const Input = ({ defaultValue, label, storageKey, type, options }) => {
             }
         }
 
-        chrome.storage.sync.set({ [storageKey]: value })
-        setValue(value)
+        if (type === 'number') {
+            finalValue = +finalValue
+        }
+
+        chrome.storage.sync.set({ [storageKey]: finalValue })
+        setValue(finalValue)
     }
 
     if (type === 'select' && options) {

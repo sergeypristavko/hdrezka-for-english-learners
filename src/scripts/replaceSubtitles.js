@@ -22,11 +22,12 @@ const replaceSubtitles = ({ dictionaryBase }) => {
     let initialized = false
 
     const init = () => {
-        let prevSubsText
-
         const rerenderSubs = () => {
             const text = getSubsText()
-            if (text === prevSubsText && prevSubsText && text) return;
+
+            if (text === window.prevSubsText && text) {
+                return;
+            }
 
             const $subtitlesBlock = $playerBody.querySelector(CUSTOM_SUBTITLES)
 
@@ -37,7 +38,7 @@ const replaceSubtitles = ({ dictionaryBase }) => {
             if (!text) return;
 
             window.prevQuoteTime = $video.currentTime
-            prevSubsText = text
+            window.prevSubsText = text
 
             if ($subtitlesBlock) {
                 $subtitlesBlock.innerHTML = Subtitles(dictionaryBase, text, true)
